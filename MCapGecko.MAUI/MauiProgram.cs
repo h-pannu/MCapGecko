@@ -1,5 +1,6 @@
-﻿using MCapGecko.MAUI.Data;
-using Microsoft.AspNetCore.Components.WebView.Maui;
+﻿using Microsoft.AspNetCore.Components.WebView.Maui;
+using MCapGecko.SharedUI.Pages.WeatherData;
+using MCapGecko.MAUI.Services;
 
 namespace MCapGecko.MAUI
 {
@@ -19,8 +20,8 @@ namespace MCapGecko.MAUI
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();
 #endif
-
-            builder.Services.AddSingleton<WeatherForecastService>();
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7075") });
+            builder.Services.AddSingleton<IWeatherForecastService,WeatherForecastServiceMaui>();
 
             return builder.Build();
         }

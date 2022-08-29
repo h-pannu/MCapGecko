@@ -49,4 +49,9 @@
         <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\MCapGecko.SharedUI\MCapGecko.SharedUI.csproj" />
+      <ProjectReference Include="..\MCapGecko\Shared\MCapGecko.Shared.csproj" />
+    </ItemGroup>
+
 </Project>
