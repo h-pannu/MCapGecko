@@ -1,9 +1,64 @@
 ﻿@page "/"
+@inject ICoinService CoinService
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+@*<h1>Hello, world!</h1>
 
 Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<SurveyPrompt Title="How is Blazor working for you?" />*@
+<div>
+    <p>Show the price of A with the market cap of B</p>
+</div>
+<div>
+    <p>Select Coin A</p>
+</div>
+<div>
+    <select class="form-control" @bind="@SelectedCoinIdA">
+        @foreach (var coin in CoinList)
+        {
+            <option value="@coin.id">@coin.name</option>
+        }
+    </select>
+</div>
+<div>
+    <p>Select Coin B</p>
+</div>
+<div>
+    <select class="form-control" @bind="@SelectedCoinIdB">
+        @foreach (var coin in CoinList)
+        {
+            <option value="@coin.id">@coin.name</option>
+        }
+    </select>
+</div>
+<div>
+    <p><span>Data powered by </span><img src="_content/MCapGecko.SharedUI/images/coingecko_logo.png" alt="coingecko"></p>
+</div>
+
+
+
+@code{
+    string selectedCoinIdA;
+
+    string SelectedCoinIdA
+    {
+        get => selectedCoinIdA;
+        set { selectedCoinIdA = value; }
+    }
+
+    string selectedCoinIdB;
+
+    string SelectedCoinIdB
+    {
+        get => selectedCoinIdB;
+        set { selectedCoinIdB = value; }
+    }
+
+    List<Coin> CoinList { get; set; } = new List<Coin>();
+    protected override async Task OnInitializedAsync()
+    {
+        CoinList = await CoinService.GetCoins();
+    }
+}
