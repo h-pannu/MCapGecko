@@ -1,16 +1,17 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http.Json;
 
-namespace MCapGecko.Client.Services
+namespace MCapGecko.MAUI.Services
 {
-    public class CoinService : ICoinService
+    public class CoinServiceMaui : ICoinService
     {
         private readonly HttpClient _httpClient;
-        public CoinService(HttpClient httpClient)
+        public CoinServiceMaui(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

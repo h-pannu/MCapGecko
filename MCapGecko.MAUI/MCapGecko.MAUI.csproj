@@ -50,6 +50,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Syncfusion.Blazor" Version="20.2.0.46" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\MCapGecko.SharedUI\MCapGecko.SharedUI.csproj" />
       <ProjectReference Include="..\MCapGecko\Shared\MCapGecko.Shared.csproj" />
     </ItemGroup>
