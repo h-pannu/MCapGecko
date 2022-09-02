@@ -19,8 +19,17 @@ namespace MCapGecko.MAUI.Services
 
         public async Task<List<Coin>> GetCoins()
         {
-            var result = await _httpClient.GetFromJsonAsync<List<Coin>>("api/coin");
-            return result;
+            try
+            {
+                var result = await _httpClient.GetFromJsonAsync<List<Coin>>("api/coin");
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            
         }
     }
 }

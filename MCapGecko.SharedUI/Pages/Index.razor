@@ -3,11 +3,6 @@
 
 <PageTitle>Index</PageTitle>
 
-@*<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />*@
 <div>
     <p>Show the price of A with the market cap of B</p>
 </div>
@@ -18,7 +13,10 @@ Welcome to your new app.
     <p>Select Coin A</p>
 </div>
 <div>
-    <SfDropDownList TValue="string" TItem="Coin" Placeholder="Select Coin A" DataSource="@CoinListA">
+    <SfDropDownList TValue="string" TItem="Coin" Placeholder="Select Coin A" AllowFiltering=true Query="@Query" EnableVirtualization=true>
+        <SfDataManager Json="@CoinListA" Adaptor="Adaptors.JsonAdaptor" Offline=true>
+
+        </SfDataManager>
         <DropDownListEvents TItem="Coin" TValue="string" ValueChange="@ValueChangeHandlerA"></DropDownListEvents>
         <DropDownListFieldSettings Value="id" Text="name"></DropDownListFieldSettings>
         <DropDownListTemplates TItem="Coin">
@@ -50,7 +48,9 @@ Welcome to your new app.
     <p>Select Coin B</p>
 </div>
 <div>
-    <SfDropDownList TValue="string" TItem="Coin" Placeholder="Select Coin B" DataSource="@CoinListB">
+    <SfDropDownList TValue="string" TItem="Coin" Placeholder="Select Coin B" EnableVirtualization="true" Query="@Query" AllowFiltering=true>
+        <SfDataManager Json="@CoinListB" Adaptor="Adaptors.JsonAdaptor" Offline=true>
+        </SfDataManager>
         <DropDownListEvents TItem="Coin" TValue="string" ValueChange="@ValueChangeHandlerB"></DropDownListEvents>
         <DropDownListFieldSettings Value="id" Text="name"></DropDownListFieldSettings>
         <DropDownListTemplates TItem="Coin">
@@ -307,6 +307,9 @@ Welcome to your new app.
 </style>
 
 @code{
+
+    public Query Query = new Query().Select(new List<string> { "id", "name" }).Take(25).RequiresCount();
+
     public Coin SelectedCoinA { get; set; } = new Coin();
     public Coin SelectedCoinB { get; set; } = new Coin();
     public string EstimatedPriceA{ get; set; }=string.Empty;
@@ -331,7 +334,8 @@ Welcome to your new app.
 
         var x = (SelectedCoinB.market_cap is null ? 0 : (Double)SelectedCoinB.market_cap) / (SelectedCoinA.market_cap is null ? 0 : (Double)SelectedCoinA.market_cap);
         EstimatedXA = Convert.ToString(Math.Round(x, 2) + "X");
-        var t = Math.Round(SelectedCoinA.current_price * x,2);
+        var t = SelectedCoinA.current_price * x;
+        //var tt = Math.Round(SelectedCoinA.current_price * x, 2);
         EstimatedPriceA = "$ " + Convert.ToString(t);
     }
 }

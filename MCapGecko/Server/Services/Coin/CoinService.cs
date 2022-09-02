@@ -19,7 +19,7 @@ namespace MCapGecko.Server.Services
         }
         public async Task<List<Coin>> GetCoinsAsync()
         {
-            var coinList = await _context.Coins.OrderByDescending(i=>i.market_cap_rank).ToListAsync();
+            var coinList = await _context.Coins.OrderBy(i=>i.market_cap_rank).ToListAsync();
             return coinList;
             
         }
