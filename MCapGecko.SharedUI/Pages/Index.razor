@@ -3,93 +3,144 @@
 
 <PageTitle>Index</PageTitle>
 
-<div>
-    <p>Show the price of A with the market cap of B</p>
+<div class="col-md-12 col-lg-12">
+    <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="settings-profile" role="tabpanel"
+             aria-labelledby="settings-profile-tab">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Show the price of A with the market cap of B</h5>
+                    <div class="settings-profile">
+                        <form>
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <coingecko-coin-price-marquee-widget coin-ids="bitcoin,ethereum,eos,ripple,litecoin" currency="usd" background-color="#ffffff" locale="en"></coingecko-coin-price-marquee-widget>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-5">
+                                    <label for="securityOne">Coin A</label>
+                                    <div id="container">
+                                        <SfSpinner @bind-Visible="@SpinnerVisible">
+                                        </SfSpinner>
+                                    </div>
+                                    <SfDropDownList TValue="string" TItem="Coin" ShowClearButton=true Placeholder="Select Coin A" AllowFiltering=true Query="@Query" EnableVirtualization=true>
+                                        <SfDataManager Json="@CoinListA" Adaptor="Adaptors.JsonAdaptor" Offline=true>
+                                        </SfDataManager>
+                                        <DropDownListEvents TItem="Coin" TValue="string" ValueChange="@ValueChangeHandlerA"></DropDownListEvents>
+                                        <DropDownListFieldSettings Value="id" Text="name"></DropDownListFieldSettings>
+                                        <DropDownListTemplates TItem="Coin">
+                                            <ItemTemplate>
+                                                <div>
+                                                    @*<div class="aaa">@((context as Coin).market_cap_rank) </div>*@
+                                                    <img class="empImage" src="@((context as Coin).image)" alt="employee" />
+                                                    <div class="ename">@((context as Coin).name) </div>
+                                                    <div class="job"> @((context as Coin).symbol)</div>
+                                                </div>
+                                            </ItemTemplate>
+                                            @* <HeaderTemplate>
+                                            <div class="header"> <span>Market Rank</span> <span>Photo</span> <span class="info">Coin Info</span></div>
+                                            </HeaderTemplate>*@
+                                            <ValueTemplate>
+                                                <div class="dropdown-width" style="width:100%;height:100%;">
+                                                    <img class="value" src="@((context as Coin).image)" height="40" width="40" alt="Coin">
+                                                    <div class="name">@((context as Coin).name) $@((context as Coin).current_price) </div>
+                                                </div>
+                                            </ValueTemplate>
+                                            <NoRecordsTemplate>
+                                                <span class='norecord'> NO DATA AVAILABLE</span>
+                                            </NoRecordsTemplate>
+                                        </DropDownListTemplates>
+                                    </SfDropDownList>
+                                    <button type="button" @onclick="@OnBtnClick">Show Chart A</button>
+                                    <SfDialog Target="#target" Width="810px" MinHeight="770" Height="770px" AllowPrerender=true EnableResize=true IsModal=true ShowCloseIcon="true" @bind-Visible="Visibility">
+                                        <DialogTemplates>
+                                            <Header>Hello</Header>
+                                            <Content>
+                                                @if (Visibility)
+                                                {
+                                                    @*<iframe width="700" height="530" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_44ae2&symbol=BINANCEUS%3ABONEUSDT&interval=D&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=America%2FLos_Angeles&showpopupbutton=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&showpopupbutton=1&locale=en&utm_source=localhost&utm_medium=widget&utm_campaign=chart&utm_term=BINANCEUS%3ABONEUSDT" frameborder="0"></iframe>*@
+                                                    <div class="form-row">
+                                                        <div class="col-md-6">
+                                                            <coingecko-coin-ticker-widget coin-id="@SelectedCoinA.id" currency="usd" locale="en"></coingecko-coin-ticker-widget>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <coingecko-coin-ticker-widget coin-id="@SelectedCoinB.id" currency="usd" locale="en"></coingecko-coin-ticker-widget>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="col-md-12">
+                                                            <coingecko-coin-compare-chart-widget coin-ids="@SelectedCoinA.id,@SelectedCoinB.id" currency="usd" locale="en"></coingecko-coin-compare-chart-widget>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </Content>
+                                        </DialogTemplates>
+                                    </SfDialog>
+                                </div>
+                                <div class="col-md-2">
+                                    <div style="text-align:center;">
+                                        <sfbutton type="button" @onclick="SwapCoins">
+                                            <img src="_content/MCapGecko.SharedUI/assets/img/466154.png" width="60" height="60">
+                                            </sfbutton>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <label for="securityOne">Coin B</label>
+                                    <SfDropDownList TValue="string" TItem="Coin" ShowClearButton=true Placeholder="Select Coin B" EnableVirtualization="true" Query="@Query" AllowFiltering=true>
+                                        <SfDataManager Json="@CoinListB" Adaptor="Adaptors.JsonAdaptor" Offline=true>
+                                        </SfDataManager>
+                                        <DropDownListEvents TItem="Coin" TValue="string" ValueChange="@ValueChangeHandlerB"></DropDownListEvents>
+                                        <DropDownListFieldSettings Value="id" Text="name"></DropDownListFieldSettings>
+                                        <DropDownListTemplates TItem="Coin">
+                                            <ItemTemplate>
+                                                <div>
+                                                    @*<div class="aaa">@((context as Coin).market_cap_rank) </div>*@
+                                                    <img class="empImage" src="@((context as Coin).image)" alt="Coin" />
+                                                    <div class="ename">@((context as Coin).name) </div>
+                                                    <div class="job"> @((context as Coin).symbol)</div>
+                                                </div>
+                                            </ItemTemplate>
+                                            @*<HeaderTemplate>
+                                                <div class="header"> <span>Market Rank</span> <span>Photo</span> <span class="info">Coin Info</span></div>
+                                            </HeaderTemplate>*@
+                                            <ValueTemplate>
+                                                <div class="dropdown-width" style="width:100%;height:100%;">
+                                                    <img class="value" src="@((context as Coin).image)" height="40" width="40" alt="employee">
+                                                    <div class="name">@((context as Coin).name) $@((context as Coin).current_price)</div>
+                                                </div>
+                                            </ValueTemplate>
+                                            <NoRecordsTemplate>
+                                                <span class='norecord'> NO DATA AVAILABLE</span>
+                                            </NoRecordsTemplate>
+                                        </DropDownListTemplates>
+                                    </SfDropDownList>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <p>Select Currency</p>
-</div>
-<div>
-    <p>Select Coin A</p>
-</div>
-<div>
-    <SfDropDownList TValue="string" TItem="Coin" Placeholder="Select Coin A" AllowFiltering=true Query="@Query" EnableVirtualization=true>
-        <SfDataManager Json="@CoinListA" Adaptor="Adaptors.JsonAdaptor" Offline=true>
 
-        </SfDataManager>
-        <DropDownListEvents TItem="Coin" TValue="string" ValueChange="@ValueChangeHandlerA"></DropDownListEvents>
-        <DropDownListFieldSettings Value="id" Text="name"></DropDownListFieldSettings>
-        <DropDownListTemplates TItem="Coin">
-            <ItemTemplate>
-                <div>
-                    <div class="aaa">@((context as Coin).market_cap_rank) </div>
-                    <img class="empImage" src="@((context as Coin).image)" alt="employee" />
-                    <div class="ename">@((context as Coin).name) </div>
-                    <div class="job"> @((context as Coin).symbol)</div>
-                </div>
-            </ItemTemplate>
-            <HeaderTemplate>
-                <div class="header"> <span>Market Rank</span> <span>Photo</span> <span class="info">Coin Info</span></div>
-            </HeaderTemplate>
-            <ValueTemplate>
-                <div class="dropdown-width" style="width:100%;height:100%;">
-                    <img class="value" src="@((context as Coin).image)" height="26" width="26" alt="employee">
-                    <div class="name">@((context as Coin).name) </div>
-                    <div class="name">$ @((context as Coin).current_price) </div>
-                </div>
-            </ValueTemplate>
-        <NoRecordsTemplate>
-            <span class='norecord'> NO DATA AVAILABLE</span>
-        </NoRecordsTemplate>
-    </DropDownListTemplates>
-    </SfDropDownList>
+<div class="d-flexi justify-content-center" hidden="@IsHideResultDiv">
+    <div class="form-access my-auto">
+        <form>
+            <div class="form-group">
+                <span><label>@SelectedCoinA.name</label> with the market cap of <label>@SelectedCoinB.name</label></span>
+            </div>
+            <span><img src="@SelectedCoinA.image" alt="@SelectedCoinA.name" height="30" width="30" /><label>@EstimatedPriceA</label> <label>(@EstimatedXA)</label></span>
+        </form>
+    </div>
 </div>
-<div>
-    <p>Select Coin B</p>
-</div>
-<div>
-    <SfDropDownList TValue="string" TItem="Coin" Placeholder="Select Coin B" EnableVirtualization="true" Query="@Query" AllowFiltering=true>
-        <SfDataManager Json="@CoinListB" Adaptor="Adaptors.JsonAdaptor" Offline=true>
-        </SfDataManager>
-        <DropDownListEvents TItem="Coin" TValue="string" ValueChange="@ValueChangeHandlerB"></DropDownListEvents>
-        <DropDownListFieldSettings Value="id" Text="name"></DropDownListFieldSettings>
-        <DropDownListTemplates TItem="Coin">
-            <ItemTemplate>
-                <div>
-                    <div class="aaa">@((context as Coin).market_cap_rank) </div>
-                    <img class="empImage" src="@((context as Coin).image)" alt="employee" />
-                    <div class="ename">@((context as Coin).name) </div>
-                    <div class="job"> @((context as Coin).symbol)</div>
-                </div>
-            </ItemTemplate>
-            <HeaderTemplate>
-                <div class="header"> <span>Market Rank</span> <span>Photo</span> <span class="info">Coin Info</span></div>
-            </HeaderTemplate>
-            <ValueTemplate>
-                <div class="dropdown-width" style="width:100%;height:100%;">
-                    <img class="value" src="@((context as Coin).image)" height="26" width="26" alt="employee">
-                    <div class="name">@((context as Coin).name) </div>
-                    <div class="name">$ @((context as Coin).current_price) </div>
-                </div>
-            </ValueTemplate>
-            <NoRecordsTemplate>
-                <span class='norecord'> NO DATA AVAILABLE</span>
-            </NoRecordsTemplate>
-        </DropDownListTemplates>
-    </SfDropDownList>
-</div>
-<div>
-    <p>
-        <label>@SelectedCoinA.name</label> with the market cap of <label>@SelectedCoinB.name</label>
-    </p>
-    <p><label>@EstimatedPriceA</label> <label>(@EstimatedXA)</label></p>
-</div>
-<div>
-    <p><span>Data powered by </span><img src="_content/MCapGecko.SharedUI/images/coingecko_logo.png" alt="coingecko"></p>
-</div>
-<CoinChart/>
 
 <style>
+    #target {
+        height: 500px;
+    }
+
     .control-wrapper {
         max-width: 250px;
         margin: 0 auto;
@@ -227,7 +278,12 @@
     }
 
     .name {
-        padding: 5px 42px;
+        padding: 12px 80px;
+        opacity: .87;
+    }
+
+    .price {
+        padding: 1px 200px;
         opacity: .87;
     }
 
@@ -306,21 +362,48 @@
     }
 </style>
 
-@code{
+@code {
+
+    private bool Visibility { get; set; } = false;
+
+    private async void OnBtnClick()
+    {
+        this.Visibility = true;
+    }
+
+    private bool IsHideResultDiv { get; set; } = true;
+    private bool SpinnerVisible { get; set; } = false;
+
 
     public Query Query = new Query().Select(new List<string> { "id", "name" }).Take(25).RequiresCount();
 
     public Coin SelectedCoinA { get; set; } = new Coin();
     public Coin SelectedCoinB { get; set; } = new Coin();
-    public string EstimatedPriceA{ get; set; }=string.Empty;
+    public Coin SwapCoinC { get; set; } = new Coin();
+    public string EstimatedPriceA { get; set; } = string.Empty;
     public string EstimatedXA { get; set; } = string.Empty;
 
     List<Coin> CoinListA { get; set; } = new List<Coin>();
     List<Coin> CoinListB { get; set; } = new List<Coin>();
     protected override async Task OnInitializedAsync()
     {
+        SpinnerVisible = true;
         CoinListA = await CoinService.GetCoins();
         CoinListB = CoinListA;
+        SpinnerVisible = false;
+    }
+
+    private void ShowChartA()
+    {
+
+    }
+
+    private async void SwapCoins()
+    {
+        SwapCoinC = SelectedCoinB;
+        SelectedCoinB = SelectedCoinA;
+        SelectedCoinA = SelectedCoinB;
+
     }
 
     private void ValueChangeHandlerA(ChangeEventArgs<string, Coin> args)
@@ -334,8 +417,9 @@
 
         var x = (SelectedCoinB.market_cap is null ? 0 : (Double)SelectedCoinB.market_cap) / (SelectedCoinA.market_cap is null ? 0 : (Double)SelectedCoinA.market_cap);
         EstimatedXA = Convert.ToString(Math.Round(x, 2) + "X");
-        var t = SelectedCoinA.current_price * x;
-        //var tt = Math.Round(SelectedCoinA.current_price * x, 2);
+        var t = Convert.ToDecimal(SelectedCoinA.current_price * x).ToString("0.#####"); ;
         EstimatedPriceA = "$ " + Convert.ToString(t);
+
+        IsHideResultDiv = false;
     }
 }

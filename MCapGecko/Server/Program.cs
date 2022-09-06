@@ -78,6 +78,7 @@ app.MapFallbackToFile("index.html");
 
 app.UseHangfireDashboard("/dashboard");
 
+
 //ICoinGeckoService CoinGeckoService = app.Services.GetRequiredService<ICoinGeckoService>();
 
 //var scope = app.Services.CreateScope();

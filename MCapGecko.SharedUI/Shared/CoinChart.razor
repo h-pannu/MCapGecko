@@ -1,6 +1,8 @@
-﻿<SfStockChart Title="Crypto">
+﻿@inject IJSRuntime JS
+
+@*<SfStockChart Title='Crypto'>
     <StockChartSeriesCollection>
-        <StockChartSeries DataSource="@StockDetails" Type="ChartSeriesType.Candle" XName="Date" YName="Close" High="High" Low="Low" Open="Open" Close="Close" Volume="Volume"></StockChartSeries>
+        <StockChartSeries DataSource='@StockDetails' Type='ChartSeriesType.Candle' XName='Date' YName='Close' High='High' Low='Low' Open='Open' Close='Close' Volume='Volume'></StockChartSeries>
     </StockChartSeriesCollection>
 </SfStockChart>
 
@@ -28,3 +30,34 @@
         new StockChartData { Date = new DateTime(2012, 05, 28), Open = 81.5571, High = 83.0714, Low = 80.0743, Close = 80.1414, Volume = 480059584},
     };
 }
+*@
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await JS.InvokeVoidAsync("testing");
+    }
+}
+
+
+@*new TradingView.widget({'autosize': true,'symbol': 'NASDAQ:AAPL','interval': 'D','timezone': 'Etc/UTC','theme': 'light','style': '1','locale': 'en','toolbar_bg': '#f1f3f6','enable_publishing': false,'allow_symbol_change': true,'container_id': 'tradingview_3ca34'});
+
+@*<script>
+  new TradingView.widget(
+  {
+  'autosize': true,
+  'symbol': 'NASDAQ:AAPL',
+  'interval': 'D',
+  'timezone': 'Etc/UTC',
+  'theme': 'light',
+  'style': '1',
+  'locale': 'en',
+  'toolbar_bg': '#f1f3f6',
+  'enable_publishing': false,
+  'allow_symbol_change': true,
+  'container_id': 'tradingview_3ca34'
+}
+  );
+  </script>*@
+
