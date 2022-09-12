@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MCapGecko.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220830002500_coin")]
+    [Migration("20220910200931_coin")]
     partial class coin
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,28 +29,28 @@ namespace MCapGecko.Server.Migrations
                     b.Property<string>("id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<double>("ath")
+                    b.Property<double?>("ath")
                         .HasColumnType("float");
 
-                    b.Property<double>("ath_change_percentage")
+                    b.Property<double?>("ath_change_percentage")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("ath_date")
+                    b.Property<DateTime?>("ath_date")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("atl")
+                    b.Property<double?>("atl")
                         .HasColumnType("float");
 
-                    b.Property<double>("atl_change_percentage")
+                    b.Property<double?>("atl_change_percentage")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("atl_date")
+                    b.Property<DateTime?>("atl_date")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("circulating_supply")
+                    b.Property<double?>("circulating_supply")
                         .HasColumnType("float");
 
-                    b.Property<double>("current_price")
+                    b.Property<double?>("current_price")
                         .HasColumnType("float");
 
                     b.Property<long?>("fully_diluted_valuation")
@@ -63,14 +63,14 @@ namespace MCapGecko.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("last_updated")
+                    b.Property<DateTime?>("last_updated")
                         .HasColumnType("datetime2");
 
                     b.Property<double?>("low_24h")
                         .HasColumnType("float");
 
-                    b.Property<int>("market_cap")
-                        .HasColumnType("int");
+                    b.Property<long?>("market_cap")
+                        .HasColumnType("bigint");
 
                     b.Property<double?>("market_cap_change_24h")
                         .HasColumnType("float");
@@ -78,7 +78,7 @@ namespace MCapGecko.Server.Migrations
                     b.Property<double?>("market_cap_change_percentage_24h")
                         .HasColumnType("float");
 
-                    b.Property<int>("market_cap_rank")
+                    b.Property<int?>("market_cap_rank")
                         .HasColumnType("int");
 
                     b.Property<double?>("max_supply")
@@ -101,7 +101,7 @@ namespace MCapGecko.Server.Migrations
                     b.Property<double?>("total_supply")
                         .HasColumnType("float");
 
-                    b.Property<double>("total_volume")
+                    b.Property<double?>("total_volume")
                         .HasColumnType("float");
 
                     b.HasKey("id");

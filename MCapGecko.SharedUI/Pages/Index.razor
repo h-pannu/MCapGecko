@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using System.Globalization
+@using System.Diagnostics
 @inject ICoinService CoinService
 
 <PageTitle>Index</PageTitle>
@@ -24,7 +26,8 @@
                                         <SfSpinner @bind-Visible="@SpinnerVisible">
                                         </SfSpinner>
                                     </div>
-                                    <SfDropDownList TValue="string" TItem="Coin" ShowClearButton=true Placeholder="Select Coin A" AllowFiltering=true Query="@Query" EnableVirtualization=true>
+                                    <SfDropDownList @ref="ddlCoinA" TValue="string" TItem="Coin" ShowClearButton=true Placeholder="Select Coin A" AllowFiltering=true
+                                                    Query="@QueryA" EnableVirtualization=true @bind-Value="@ddCoinA">
                                         <SfDataManager Json="@CoinListA" Adaptor="Adaptors.JsonAdaptor" Offline=true>
                                         </SfDataManager>
                                         <DropDownListEvents TItem="Coin" TValue="string" ValueChange="@ValueChangeHandlerA"></DropDownListEvents>
@@ -44,7 +47,7 @@
                                             <ValueTemplate>
                                                 <div class="dropdown-width" style="width:100%;height:100%;">
                                                     <img class="value" src="@((context as Coin).image)" height="40" width="40" alt="Coin">
-                                                    <div class="name">@((context as Coin).name) $@((context as Coin).current_price) </div>
+                                                    <div class="name">@((context as Coin).name) $@(Convert.ToDouble((context as Coin).current_price).ToString("0.###############")) </div>
                                                 </div>
                                             </ValueTemplate>
                                             <NoRecordsTemplate>
@@ -87,7 +90,7 @@
                                 </div>
                                 <div class="col-md-5">
                                     <label for="securityOne">Coin B</label>
-                                    <SfDropDownList TValue="string" TItem="Coin" ShowClearButton=true Placeholder="Select Coin B" EnableVirtualization="true" Query="@Query" AllowFiltering=true>
+                                    <SfDropDownList @ref="ddlCoinB" TValue="string" TItem="Coin" ShowClearButton=true Placeholder="Select Coin B" EnableVirtualization="true" Query="@QueryB" AllowFiltering=true @bind-Value="@ddCoinB">
                                         <SfDataManager Json="@CoinListB" Adaptor="Adaptors.JsonAdaptor" Offline=true>
                                         </SfDataManager>
                                         <DropDownListEvents TItem="Coin" TValue="string" ValueChange="@ValueChangeHandlerB"></DropDownListEvents>
@@ -107,7 +110,7 @@
                                             <ValueTemplate>
                                                 <div class="dropdown-width" style="width:100%;height:100%;">
                                                     <img class="value" src="@((context as Coin).image)" height="40" width="40" alt="employee">
-                                                    <div class="name">@((context as Coin).name) $@((context as Coin).current_price)</div>
+                                                    <div class="name">@((context as Coin).name) $@(Convert.ToDouble((context as Coin).current_price).ToString("0.###############"))</div>
                                                 </div>
                                             </ValueTemplate>
                                             <NoRecordsTemplate>
@@ -364,7 +367,13 @@
 
 @code {
 
+    SfDropDownList<string, Coin>? ddlCoinA;
+    SfDropDownList<string, Coin>? ddlCoinB;
+
     private bool Visibility { get; set; } = false;
+
+    public string ddCoinA { get; set; } = string.Empty;
+    public string ddCoinB { get; set; } = string.Empty;
 
     private async void OnBtnClick()
     {
@@ -375,11 +384,12 @@
     private bool SpinnerVisible { get; set; } = false;
 
 
-    public Query Query = new Query().Select(new List<string> { "id", "name" }).Take(25).RequiresCount();
+    public Query QueryA = new Query().Select(new List<string> { "id", "name" }).Take(10).RequiresCount();
+    public Query QueryB = new Query().Select(new List<string> { "id", "name" }).Take(10).RequiresCount();
 
-    public Coin SelectedCoinA { get; set; } = new Coin();
-    public Coin SelectedCoinB { get; set; } = new Coin();
-    public Coin SwapCoinC { get; set; } = new Coin();
+    public Coin SelectedCoinA = new Coin();
+    public Coin SelectedCoinB = new Coin();
+    public Coin SwapCoinC = new Coin();
     public string EstimatedPriceA { get; set; } = string.Empty;
     public string EstimatedXA { get; set; } = string.Empty;
 
@@ -388,38 +398,63 @@
     protected override async Task OnInitializedAsync()
     {
         SpinnerVisible = true;
+
         CoinListA = await CoinService.GetCoins();
+
         CoinListB = CoinListA;
+
         SpinnerVisible = false;
-    }
-
-    private void ShowChartA()
-    {
-
     }
 
     private async void SwapCoins()
     {
         SwapCoinC = SelectedCoinB;
         SelectedCoinB = SelectedCoinA;
-        SelectedCoinA = SelectedCoinB;
+        SelectedCoinA = SwapCoinC;
+
+        ddCoinA = SelectedCoinA.id;
+        ddCoinB = SelectedCoinB.id;
 
     }
 
     private void ValueChangeHandlerA(ChangeEventArgs<string, Coin> args)
     {
-        SelectedCoinA = args.ItemData;
+        SelectedCoinA = args.ItemData == null ? new Coin() : args.ItemData;
+        //ddCoinA = SelectedCoinA.id;
+
+        if (ddCoinA is not null && ddCoinB is not null)
+        {
+            var tt = Convert.ToDouble(SelectedCoinB.market_cap / SelectedCoinA.circulating_supply);
+            EstimatedPriceA = "$ " + tt.ToString("0.###############");
+
+            EstimatedXA = Convert.ToDouble(tt / SelectedCoinA.current_price).ToString("0.##") + "X";
+
+            IsHideResultDiv = false;
+        }
+        else
+            IsHideResultDiv = true;
+
+        if (ddCoinB is null && SelectedCoinA.id != "")
+            this.ddlCoinB?.ShowPopup();
     }
 
     private void ValueChangeHandlerB(ChangeEventArgs<string, Coin> args)
     {
-        SelectedCoinB = args.ItemData;
+        SelectedCoinB = args.ItemData == null ? new Coin() : args.ItemData;
+        //ddCoinB = SelectedCoinB.id;
+        if (ddCoinA is not null && ddCoinB is not null)
+        {
+            var tt = Convert.ToDouble(SelectedCoinB.market_cap / SelectedCoinA.circulating_supply);
+            EstimatedPriceA = "$ " + tt.ToString("0.###############");
 
-        var x = (SelectedCoinB.market_cap is null ? 0 : (Double)SelectedCoinB.market_cap) / (SelectedCoinA.market_cap is null ? 0 : (Double)SelectedCoinA.market_cap);
-        EstimatedXA = Convert.ToString(Math.Round(x, 2) + "X");
-        var t = Convert.ToDecimal(SelectedCoinA.current_price * x).ToString("0.#####"); ;
-        EstimatedPriceA = "$ " + Convert.ToString(t);
+            EstimatedXA = Convert.ToDouble(tt / SelectedCoinA.current_price).ToString("0.##") + "X";
 
-        IsHideResultDiv = false;
+            IsHideResultDiv = false;
+        }
+        else
+            IsHideResultDiv = true;
+
+        if (ddCoinA is null && SelectedCoinB.id != "")
+            this.ddlCoinA?.ShowPopup();
     }
 }

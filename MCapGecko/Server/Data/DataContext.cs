@@ -13,7 +13,7 @@ namespace MCapGecko.Server.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=1IS-HARPREET-LT;Database=CMapGecko;trusted_connection=true;");
+            optionsBuilder.UseSqlServer(@"Server=(LocalDb)\MSSQLLocalDB;Database=CMapGecko;trusted_connection=true;");
         }
 
         public DataContext()
